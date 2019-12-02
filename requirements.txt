@@ -1,4 +1,4 @@
 #We list here all the python packages required and specific version
 
-django == 2.2
+django == 2.2.4
 djangorestframework == 3.9.2
