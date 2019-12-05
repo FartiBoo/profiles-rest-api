@@ -15,8 +15,26 @@ from rest_framework.response import Response
 #Then we assign it to the View and the Django REST framework handles it by calling a function in the View
 #for the HTTP request that you make
 
+#ADD POST METHOD TO APIVIEW --------- 
+
+#the status objects from the rEST framework is a list of HTTP status codes that we can use when returning responses from our API
+
+from rest_framework import status
+
+#serializer module we created in the serializers.py
+#we use this module to tell our APIView what data to expect when making post input and patch requests to our API
+
+from profiles_api import serializers
+
 class HelloApiView(APIView):
     """Test API View"""
+
+    #ADD POST METHOD TO APIVIEW --------- 
+
+    #We set the serializer 
+    #This configures our API View to have the serializer class we created in serializers.py
+
+    serializer_class = serializers.HelloSerializer 
 
     #We will accept a HTTP get request to our API
     #HTTP get request: used to retrieve a list of objects or a specific object, so whenever we make a HTTP get request
@@ -51,3 +69,33 @@ class HelloApiView(APIView):
 
 #Now that we have our APIView we can wire it up to our URL in Django
 #We have a urls.py file in the root of our profiles_project directory, this is the entry point for all the URLs in our app
+
+#ADD POST METHOD TO APIVIEW --------- 
+#We add the post function to our API View
+#We will create a hello message when we receive a post request to our Hello API
+#Then we will retrieve the serializer and pass in the data that was sent in the request
+#self.serializer_class function is a function that comes with the API View that retrieves the configured serialized class for our view
+#It is the standard way that we should retrieve the serialized class
+#the data=request.data assigns the data, we assign this data to our serialized class and then we create a new variable for our serialized 
+#class called serializer (serializer=self.serializer_class(data=request.data))
+
+    def post(self, request):
+        """Create a hello message with our name"""
+        serializer = self.serializer_class(data=request.data)
+
+#now we can validate the serializer. Django REST framework as mentioned provides the functionality to validate the input
+#that means that the input is validated for our serializers.py requirements, in this case that the name is no longer than 10 characters
+#it will retrieve the name field we defined
+
+    if serializer.is_valid():
+        name = serializer.validated_data.get('name')
+        message = f'Hello {name}'
+    return Response({'message': message})
+    else:
+        return Response(
+        erializer.errors,
+        status=status.HTTP_400_BAD_REQUEST
+        )
+
+#if the input is not valid we retunr a HTTP 400 bad request to Response
+#serializer.errors returns a dictionary of all the errors based on the validation rules that were applied to the serializer
