@@ -1,3 +1,5 @@
+#This is the entry point for all of the URLs in our app
+
 """profiles_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -14,8 +16,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include 
+
+#path is the item that links up the admin URL to the admin app
+#This is created and enabled when we create a Django project
+#When we head to the admin/ looks up our urls.py file and matches it with the first URL that it finds
+#when we put an admin/ it detects this and then it passes the URL (admin.site.urls) for the admin site
+#which connects that URL to the admin app that is included with Django by default
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('profiles_api.urls'))
 ]
+
+#We will create a new urls.py file for our profiles_api app
